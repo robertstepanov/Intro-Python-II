@@ -3,6 +3,7 @@ import cmd
 import sys
 import textwrap
 from player import Player
+from item import Item
 # Declare all the rooms
 
 room = {
@@ -24,6 +25,10 @@ chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
 }
 
+goodies = [
+    Item('stick', 'candle')
+]
+
 
 # Link rooms together
 
@@ -44,53 +49,41 @@ room['treasure'].s_to = room['narrow']
 # Make a new player object that is currently in the 'outside' room.
 player = Player("You", room['outside'])
 
+playing = False
+
+
 print(player)
 
 # Write a loop that:
 #
+#
+
 if __name__ == "__main__":
-    while True:
-        selection = input("Select a direction to go or q to quit. ")
+    while not playing:
 
-        if selection == "q":
+        print(player.current_room)
+
+        for line in textwrap.wrap(player.current_room.print_description()):
+            print(line)
+
+        # item_choice.split(' ')
+        # if item_choice[0] == 'take' and item_choice[1] in goodies:
+        #     player.get_item(item_choice[1])
+
+    # * Waits for user input and decides what to do.
+
+        choice = input("\nSelect a direction to go or q to quit. ")
+        print("\n")
+
+    #
+    # If the user enters a cardinal direction, attempt to move to the room there.
+
+        if choice in ['n', 's', 'e', 'w']:
+            player.current_room = player.move_to(choice, player.current_room)
+            continue
+    # Print an error message if the movement isn't allowed.
+    #
+    # If the user enters "q", quit the game.
+        if choice in ['q', 'quit']:
+            playing = True
             print("Thanks for playing the game.")
-            break
-
-        try:
-            selection = selection
-            if selection == 'n':
-                if player.current_room.n_to:
-                    print("Moved North")
-                    player.current_room = player.current_room.n_to
-                    # print("You are now in ")
-                    
-            elif selection == 's':
-                if player.current_room.s_to:
-                    print("Moved South")
-                    player.current_room = player.current_room.s_to
-
-            elif selection == 'e':
-                if player.current_room.e_to:
-                    print("Moved East")
-                    player.current_room = player.current_room.e_to
-
-            elif selection == 'w':
-                if player.current_room.w_to:
-                    print("Moved West")
-                    player.current_room = player.current_room.w_to
-
-                else:
-                    print("Cant go in that direction")
-
-
-        except ValueError:
-            print("Please enter a valid direction")
-
-# * Prints the current room name
-# * Prints the current description (the textwrap module might be useful here).
-# * Waits for user input and decides what to do.
-#
-# If the user enters a cardinal direction, attempt to move to the room there.
-# Print an error message if the movement isn't allowed.
-#
-# If the user enters "q", quit the game.
