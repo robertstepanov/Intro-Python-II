@@ -1,5 +1,8 @@
 from room import Room
-
+import cmd
+import sys
+import textwrap
+from player import Player
 # Declare all the rooms
 
 room = {
@@ -37,10 +40,52 @@ room['treasure'].s_to = room['narrow']
 # Main
 #
 
+
 # Make a new player object that is currently in the 'outside' room.
+player = Player("You", room['outside'])
+
+print(player)
 
 # Write a loop that:
 #
+if __name__ == "__main__":
+    while True:
+        selection = input("Select a direction to go or q to quit. ")
+
+        if selection == "q":
+            print("Thanks for playing the game.")
+            break
+
+        try:
+            selection = selection
+            if selection == 'n':
+                if player.current_room.n_to:
+                    print("Moved North")
+                    player.current_room = player.current_room.n_to
+                    # print("You are now in ")
+                    
+            elif selection == 's':
+                if player.current_room.s_to:
+                    print("Moved South")
+                    player.current_room = player.current_room.s_to
+
+            elif selection == 'e':
+                if player.current_room.e_to:
+                    print("Moved East")
+                    player.current_room = player.current_room.e_to
+
+            elif selection == 'w':
+                if player.current_room.w_to:
+                    print("Moved West")
+                    player.current_room = player.current_room.w_to
+
+                else:
+                    print("Cant go in that direction")
+
+
+        except ValueError:
+            print("Please enter a valid direction")
+
 # * Prints the current room name
 # * Prints the current description (the textwrap module might be useful here).
 # * Waits for user input and decides what to do.
